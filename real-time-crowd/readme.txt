@@ -1,9 +1,11 @@
 === Real-Time Crowd ===
 Contributors: realtimecrowd.net
 Tags: realtime, real time, real-time, realtime crowd, real time crowd, real-time crowd
-Requires at least: 3.3
+Requires at least: 3.6
 Tested up to: 4.1
 Stable tag: 1.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 The official RealTimeCrowd.net plugin for Wordpress.
 
