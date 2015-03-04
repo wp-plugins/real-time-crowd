@@ -3,7 +3,7 @@
 Plugin Name: Real-Time Crowd
 Plugin URI: http://www.realtimecrowd.net/
 Description: Enables Real-Time Crowd tracking and generation on your WordPress site.
-Version: 1.1
+Version: 1.2
 Author: RealTimeCrowd.net
 Author URI: http://www.realtimecrowd.net/
 License: GPL2
@@ -25,17 +25,17 @@ function rtc_get_the_ID()
 
 function rtc_install() 
 {
-	/* Creates new database field */
+	//Creates new database field
 	add_option("rtc_account_name", '', '', 'yes');
 	add_option("rtc_display_widget", '', '', 'yes');
 	add_option("rtc_widget_title", 'Being read right now', '', 'yes');
 }
 function rtc_uninstall() 
 {
-	/* Deletes the database field */
-	delete_option('rtc_account_name');
-	delete_option('rtc_display_widget');
-	delete_option('rtc_widget_title');
+	//Deletes the database field
+	//delete_option('rtc_account_name');
+	//delete_option('rtc_display_widget');
+	//delete_option('rtc_widget_title');
 }
 
 function rtc_admin_action_links( $links ) 
@@ -110,6 +110,27 @@ function rtc_admin_html_page()
 		Send us <a target="_blank" href="http://www.realtimecrowd.net/Contact/">Feedback</a>
 	</p>
   </form>
+	<?php 
+		$accountAlias = get_option("rtc_account_name");
+		if (!empty($accountAlias))
+		{
+		?>
+			<div>
+				<h4>Real-Time data for account: <?php echo $accountAlias ?></h4>
+				<iframe src="http://rtc.realtimecrowd.net/viewer/v1-1/<?php echo $accountAlias ?>/" style="border:none;width:100%;height:580px;"></iframe>
+			</div>
+		<?php
+		}
+		else
+		{
+		?>
+			<div>
+				<h4>Save your Account Alias to display Real-Time data from your website</h4>
+			</div>
+		<?php
+		}
+		?>
+  	
 </div>
 <?php
 }

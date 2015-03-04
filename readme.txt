@@ -3,7 +3,7 @@ Contributors: realtimecrowd.net
 Tags: realtime, real time, real-time, realtime crowd, real time crowd, real-time crowd
 Requires at least: 3.6
 Tested up to: 4.1
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,10 +23,22 @@ This plugin enables Real-Time Crowd tracking and generation on your WordPress si
 
 == Changelog ==
 
+= 1.2 =
+* Added real-time dashboard to admin panel.
+
+= 1.1 =
+* Added checkbox for display/hide widget.
+
 = 1.0 =
 * First version.
 
 == Upgrade Notice ==
+
+= 1.2 =
+Easy upgrade
+
+= 1.1 =
+Easy upgrade
 
 = 1.0 =
 Required.
