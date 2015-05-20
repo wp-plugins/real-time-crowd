@@ -3,7 +3,7 @@
 Plugin Name: Real-Time Crowd
 Plugin URI: http://www.realtimecrowd.net/
 Description: Enables Real-Time Crowd tracking and generation on your WordPress site.
-Version: 1.2
+Version: 1.4
 Author: RealTimeCrowd.net
 Author URI: http://www.realtimecrowd.net/
 License: GPL2
@@ -28,14 +28,12 @@ function rtc_install()
 	//Creates new database field
 	add_option("rtc_account_name", '', '', 'yes');
 	add_option("rtc_display_widget", '', '', 'yes');
-	add_option("rtc_widget_title", 'Being read right now', '', 'yes');
 }
 function rtc_uninstall() 
 {
 	//Deletes the database field
 	//delete_option('rtc_account_name');
 	//delete_option('rtc_display_widget');
-	//delete_option('rtc_widget_title');
 }
 
 function rtc_admin_action_links( $links ) 
@@ -70,6 +68,8 @@ function rtc_admin_html_page()
 		Then please input your RealTimeCrowd <b>account alias</b>, and check <b>Display Widget</b> box below.
 		<br/>
 		Visit <b><a target="_blank" href="http://www.realtimecrowd.net/Partner/Account">http://www.realtimecrowd.net/Partner/Account</a></b> to see a list of all your accounts.
+		<br/>
+		<span style="color:#B50C0C;">Please Note: Real-Time Crowd works only with "Pretty Permalinks". It does not work with ugly permalinks based on query strings (like those http://example.com/?p=N). <a href="<?php echo get_admin_url(null, 'options-permalink.php')?>">Permalink settings</a></span>
 	</p>
     <table class="form-table">
       <tr valign="top">
@@ -90,18 +90,9 @@ function rtc_admin_html_page()
           <span class="description">Checking this will display the widget on every post and page of the site. (The widget also contains a small icon linking to RealTimeCrowd.net)</span>
         </td>
       </tr>
-	  <tr valign="top">
-        <th scope="row">
-          <label for="rtc_widget_title">Widget title</label>
-        </th>
-        <td>
-          <input name="rtc_widget_title" value="<?php echo get_option('rtc_widget_title'); ?>" class="regular-text" />
-          <span class="description">(ex: Being read right now)</span>
-        </td>
-      </tr>
     </table>   
     <input type="hidden" name="action" value="update" />
-    <input type="hidden" name="page_options" value="rtc_account_name,rtc_display_widget,rtc_widget_title" />
+    <input type="hidden" name="page_options" value="rtc_account_name,rtc_display_widget" />
     <p class="submit">
       <input class="button-primary" type="submit" name="Save" value="<?php _e('Save'); ?>" />
     </p>
@@ -137,7 +128,6 @@ function rtc_admin_html_page()
 function rtc_tracking_code() 
 {
 	$accountAlias = get_option("rtc_account_name");
-	$widgetTitle = get_option("rtc_widget_title");
 	$displayWidget = get_option("rtc_display_widget");
 	$pageTitle = "";
 	$pageImageUrl = "";
@@ -147,10 +137,6 @@ function rtc_tracking_code()
 		$postId = 0;
 	}
 	
-	if (empty($widgetTitle)) 
-	{
-		$widgetTitle = "Being read right now";
-	}
 	if ($displayWidget == "1")
 	{
 		$displayWidget = "true";
@@ -169,6 +155,20 @@ function rtc_tracking_code()
 			if (count($image)>0)
 			{
 				$pageImageUrl = $image[0];
+			}
+		}
+		else if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) &&
+				 class_exists('Woocommerce'))
+		{
+			//if WooCommerce is active
+			global $product;
+			if ($product)
+			{
+				$attachment_ids = $product->get_gallery_attachment_ids();
+				if (count($attachment_ids)>0)
+				{
+					$pageImageUrl = wp_get_attachment_url($attachment_ids[0]);
+				}
 			}
 		}
 	}
@@ -194,10 +194,6 @@ function rtc_tracking_code()
 					topElem.body.appendChild(scriptElem);
 				}
 				rtcObj.Account = '".$accountAlias."';
-				rtcObj.HeaderText = '".$widgetTitle."';
-				rtcObj.Color = '#555';
-				rtcObj.BorderColor = '#444444';
-				rtcObj.Position = 'right';
 				rtcObj.ContainerId = 'rtc-div-main';
 				rtcObj.RtcUrl = '//rtc.realtimecrowd.net';
 				rtcObj.HideWidget = !".$displayWidget.";
